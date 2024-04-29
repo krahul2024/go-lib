@@ -9,8 +9,8 @@
    - `operator=`: Assigns values from another list.
 
 3. **Modifiers:**
-   - `push_back(const T& value)`: Adds a new element at the end of the list.
-   - `push_front(const T& value)`: Adds a new element at the beginning of the list.
+   - `push_back(const T& value)`: Adds a new element at the end of the list. -> done 
+   - `push_front(const T& value)`: Adds a new element at the beginning of the list. -> done 
    - `pop_back()`: Removes the last element of the list.
    - `pop_front()`: Removes the first element of the list.
    - `insert(iterator pos, const T& value)`: Inserts a new element before the element at the specified position.
