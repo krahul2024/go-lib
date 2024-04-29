@@ -11,20 +11,20 @@
 3. **Modifiers:**
    - `push_back(const T& value)`: Adds a new element at the end of the list. -> done 
    - `push_front(const T& value)`: Adds a new element at the beginning of the list. -> done 
-   - `pop_back()`: Removes the last element of the list.
-   - `pop_front()`: Removes the first element of the list.
+   - `pop_back()`: Removes the last element of the list. -> done 
+   - `pop_front()`: Removes the first element of the list. -> done 
    - `insert(iterator pos, const T& value)`: Inserts a new element before the element at the specified position.
-   - `erase(iterator pos)`: Removes the element at the specified position.
-   - `clear()`: Removes all elements from the list.
+   - `erase(iterator pos)`: Removes the element at the specified position. -> done 
+   - `clear()`: Removes all elements from the list. -> done 
    - `swap(list& other)`: Swaps the contents of two lists.
 
 4. **Element Access:**
-   - `front()`: Returns a reference to the first element.
-   - `back()`: Returns a reference to the last element.
+   - `front()`: Returns a reference to the first element. -> done 
+   - `back()`: Returns a reference to the last element. -> done 
 
 5. **Capacity:**
-   - `empty()`: Checks whether the list is empty.
-   - `size()`: Returns the number of elements in the list.
+   - `empty()`: Checks whether the list is empty. -> done 
+   - `size()`: Returns the number of elements in the list. -> done 
 
 6. **Iterators:**
    - `begin()`, `end()`: Returns iterators referring to the first and one past the last element of the list, respectively.

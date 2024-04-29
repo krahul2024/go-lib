@@ -3,24 +3,19 @@ package main
 import (
 	"fmt"
 
-	"github.com/krahul2024/go-lib/lists"
+	"github.com/krahul2024/go-lib/lists/doubleList"
 )
 
 func main() {
 
-	list := lists.NewList[string]("first", "second", "third", "fourth")
-	// list.PushBack("fourth")
-	// list.PushFront("zero'th")
-
-	it := list.Iterator()
-	count := 0
-	for it != nil && count < 2 {
-		fmt.Println(it.Value())
+	dlist := doubleList.NewList(1, 110)
+	dlist.PushBack(31)
+	dlist.PushBack(90)
+	dlist.PushBack(81)
+	it := dlist.Iterator()
+	for it != nil {
+		fmt.Println(it.Value()) // Print the value of the node the iterator is pointing to
 		it = it.Next()
-		count++
 	}
-	fmt.Println(it.Value(), it)
-	index, err := list.Find("fourth")
-	result, err := list.Value(it)
-	fmt.Println(index, err, result)
+
 }

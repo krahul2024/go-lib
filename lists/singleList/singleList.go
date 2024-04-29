@@ -1,4 +1,4 @@
-package lists
+package singleList
 
 import (
 	"errors"
@@ -145,7 +145,7 @@ func (list *list[T]) Remove(itr *iterator[T]) error {
 	}
 	// if the iterator points to nil, it a list with single element or the iterator is at the end of list
 	if itr.next == nil {
-		// if it is list with single value
+		// list with single value
 		if itr.next == list.head.next {
 			itr = nil
 			return list.PopFront()
@@ -188,4 +188,14 @@ func (list *list[T]) Value(it *iterator[T]) (T, error) {
 		return zeroValue, errors.New("invalid iterator")
 	}
 	return it.value, nil
+}
+
+func (list *list[T]) Clear() {
+	list.head = nil
+	list.tail = nil
+	list.size = 0
+}
+
+func (list *list[T]) Empty() bool {
+	return list.size == 0
 }
