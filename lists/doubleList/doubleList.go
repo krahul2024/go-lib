@@ -4,149 +4,108 @@ import (
 	"errors"
 )
 
-//----------------Type Declarations--------------------------
+//-------------------------Type Declarations-----------------------------------------------
 
-type dlist[T comparable] struct {
+type node[T comparable] struct {
+	prev  *node[T]
+	next  *node[T]
+	value T
+}
+
+type list[T comparable] struct {
 	head *node[T]
 	tail *node[T]
 	size int
-}
-
-type node[T comparable] struct {
-	next  *node[T]
-	prev  *node[T]
-	value T
 }
 
 type iterator[T comparable] struct {
 	*node[T]
 }
 
-//-----------------------Iterator Operations----------------------------
+//-------------------------Iterator Operations------------------------------------------
 
-func (list *dlist[T]) Iterator() *iterator[T] {
-	if list.head == nil {
-		return nil
-	}
-	return &iterator[T]{list.head}
+func (list *list[T]) Begin() *iterator[T] {
+
 }
 
-func (it *iterator[T]) Value() T {
-	var zeroValue T
-	if it == nil {
-		return zeroValue
-	}
-	return it.value
+//-------------------------------------List Operations--------------------------------------
+
+func NewList[T comparable]() *list[T] {
+	head := &node[T]{}
+	tail := &node[T]{}
+	head.next = tail
+	tail.prev = head
+	return &list[T]{head: head, tail: tail, size: 0}
 }
 
-func (it *iterator[T]) Next() *iterator[T] {
-	if it == nil || it.next == nil { // doing it this way instead of just returning it.next when it != nil is because it.next is a struct pointer and this would result in nil value like this &{nil}
-		return nil
-	}
-	return &iterator[T]{it.next}
-}
-
-func (it *iterator[T]) Prev() *iterator[T] {
-	if it == nil || it.prev == nil {
-		return nil
-	}
-	return &iterator[T]{it.prev}
-}
-
-//-------------------List Operations-------------------------------------
-
-func NewList[T comparable](values ...T) *dlist[T] {
-	dlist := &dlist[T]{}
-	for _, value := range values {
-		dlist.PushBack(value)
-	}
-	return dlist
-}
-
-func (list *dlist[T]) PopBack() (T, error) {
-	var value T
-	if list.head == nil {
-		return value, errors.New("can't delete from an empty list")
-	}
-	value = list.head.value
-	if list.head.next == nil {
-		list.head = nil
-		list.tail = nil
-		list.size = 0
-		return value, nil
-	}
-	list.tail.prev.next = nil
-	tailNode := list.tail
-	list.tail = list.tail.prev
-	tailNode.prev = nil
-	list.size--
-	return value, nil
-}
-
-func (list *dlist[T]) PopFront() (T, error) {
-	var value T
-	if list.head == nil {
-		return value, errors.New("can't delete from an empty list")
-	}
-	value = list.head.value
-	if list.size == 1 {
-		list.head = nil
-		list.tail = nil
-		list.size = 0
-		return value, nil
-	}
-	list.head.next.prev = nil
-	headNode := list.head
-	list.head = list.head.next
-	headNode.next = nil
-	list.size--
-	return value, nil
-}
-
-func (list *dlist[T]) PushBack(value T) {
+func (list *list[T]) PushFront(value T) {
 	tempNode := &node[T]{value: value}
-
-	if list.head == nil {
-		list.head = tempNode
-		list.tail = tempNode
-	} else {
-		tempNode.prev = list.tail
-		list.tail.next = tempNode
-		list.tail = tempNode
-	}
+	list.head.next.prev = tempNode
+	tempNode.next = list.head.next
+	tempNode.prev = list.head
+	list.head.next = tempNode
 	list.size++
 }
 
-func (list *dlist[T]) PushFront(value T) {
+func (list *list[T]) PushBack(value T) {
 	tempNode := &node[T]{value: value}
-	if list.head == nil {
-		list.head = tempNode
-		list.tail = tempNode
-		list.size++
-	} else {
-		tempNode.next = list.head
-		list.head.prev = tempNode
-		list.head = tempNode
-		list.size++
-	}
+	list.tail.prev.next = tempNode
+	tempNode.prev = list.tail.prev
+	list.tail.prev = tempNode
+	tempNode.next = list.tail
+	list.size++
 }
 
-func (list *dlist[T]) Size() int {
+func (list *list[T]) PopBack() (T, error) {
+	var value T
+	if list.head.next == list.tail {
+		return value, errors.New("can't delete from an empty list")
+	}
+	prevNode := list.tail.prev
+	list.tail.prev.prev.next = list.tail
+	list.tail.prev = list.tail.prev.prev
+	value = prevNode.value
+	prevNode = nil
+	list.size--
+	return value, nil
+}
+
+func (list *list[T]) PopFront() (T, error) {
+	var value T
+	if list.head.next == list.tail {
+		return value, errors.New("can't delete from an empty list")
+	}
+	tempNode := list.head.next
+	list.head.next.next.prev = list.head
+	list.head.next = list.head.next.next
+	value = tempNode.value
+	tempNode = nil
+	list.size--
+	return value, nil
+}
+
+func (list *list[T]) Front() (T, error) {
+	var value T
+	if list.size == 0 || list.head.next == list.tail {
+		return value, errors.New("the list is empty")
+	}
+	return list.head.next.value, nil
+}
+
+func (list *list[T]) Back() (T, error) {
+	var value T
+	if list.size == 0 || list.head.next == list.tail {
+		return value, errors.New("the list is empty")
+	}
+	return list.tail.prev.value, nil
+}
+
+func (list *list[T]) Size() int {
 	return list.size
 }
 
-func (list *dlist[T]) Front() (T, error) {
-	var zeroValue T
-	if list.head == nil {
-		return zeroValue, errors.New("can't peek an empty list")
-	}
-	return list.head.value, nil
+func (list *list[T]) Empty() bool {
+	return list.size == 0
 }
 
-func (list *dlist[T]) Back() (T, error) {
-	var zeroValue T
-	if list.head == nil {
-		return zeroValue, errors.New("no element at the back for an empty list")
-	}
-	return list.tail.value, nil
-}
+// h[nil, t] <-> t[h, nil]
