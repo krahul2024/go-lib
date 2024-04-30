@@ -63,6 +63,46 @@ func NewList[T comparable](values ...T) *dlist[T] {
 	return dlist
 }
 
+func (list *dlist[T]) PopBack() (T, error) {
+	var value T
+	if list.head == nil {
+		return value, errors.New("can't delete from an empty list")
+	}
+	value = list.head.value
+	if list.head.next == nil {
+		list.head = nil
+		list.tail = nil
+		list.size = 0
+		return value, nil
+	}
+	list.tail.prev.next = nil
+	tailNode := list.tail
+	list.tail = list.tail.prev
+	tailNode.prev = nil
+	list.size--
+	return value, nil
+}
+
+func (list *dlist[T]) PopFront() (T, error) {
+	var value T
+	if list.head == nil {
+		return value, errors.New("can't delete from an empty list")
+	}
+	value = list.head.value
+	if list.size == 1 {
+		list.head = nil
+		list.tail = nil
+		list.size = 0
+		return value, nil
+	}
+	list.head.next.prev = nil
+	headNode := list.head
+	list.head = list.head.next
+	headNode.next = nil
+	list.size--
+	return value, nil
+}
+
 func (list *dlist[T]) PushBack(value T) {
 	tempNode := &node[T]{value: value}
 
@@ -75,6 +115,20 @@ func (list *dlist[T]) PushBack(value T) {
 		list.tail = tempNode
 	}
 	list.size++
+}
+
+func (list *dlist[T]) PushFront(value T) {
+	tempNode := &node[T]{value: value}
+	if list.head == nil {
+		list.head = tempNode
+		list.tail = tempNode
+		list.size++
+	} else {
+		tempNode.next = list.head
+		list.head.prev = tempNode
+		list.head = tempNode
+		list.size++
+	}
 }
 
 func (list *dlist[T]) Size() int {
