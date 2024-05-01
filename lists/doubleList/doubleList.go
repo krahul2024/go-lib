@@ -19,13 +19,59 @@ type list[T comparable] struct {
 }
 
 type iterator[T comparable] struct {
-	*node[T]
+	list  *list[T]
+	Ptr   *node[T]
+	Index int
 }
 
 //-------------------------Iterator Operations------------------------------------------
 
-func (list *list[T]) Begin() *iterator[T] {
+func Iterator[T comparable](list *list[T]) *iterator[T] {
+	return &iterator[T]{list, nil, -1}
+}
 
+func (it *iterator[T]) Begin() *iterator[T] {
+	return &iterator[T]{list: it.list, Ptr: it.list.head.next, Index: 0}
+}
+
+func (it *iterator[T]) End() *iterator[T] {
+	return &iterator[T]{list: it.list, Ptr: it.list.tail.prev, Index: it.list.size - 1}
+}
+
+func (it *iterator[T]) Next() (*iterator[T], error) {
+	if it == nil || it.Ptr == nil || it.list == nil || it.list.head.next == it.list.tail {
+		return nil, errors.New("can't iterate over invalid/empty list")
+	}
+	if it.Ptr.next == it.list.tail {
+		it.Ptr = nil
+		it.Index = -1
+		return it, nil
+	}
+	it.Ptr = it.Ptr.next
+	it.Index++
+	return it, nil
+}
+
+func (it *iterator[T]) Prev() (*iterator[T], error) {
+	if it == nil || it.Ptr == nil || it.list == nil || it.list.head.next == it.list.tail {
+		return nil, errors.New("can't iterate over invalid/empty list")
+	}
+	if it.Ptr.prev == it.list.head {
+		it.Ptr = nil
+		it.Index = -1
+		return it, nil
+	}
+	it.Ptr = it.Ptr.prev
+	it.Index--
+	return it, nil
+}
+
+func (it *iterator[T]) Value() (T, error) {
+	var value T
+	if it == nil || it.list == nil || it.list.head.next == it.list.tail || it.Ptr == nil { // in any of the cases the list seems to be empty
+		return value, errors.New("can't get value for invalid/non-existent node")
+	}
+	return it.Ptr.value, nil
 }
 
 //-------------------------------------List Operations--------------------------------------
@@ -107,5 +153,24 @@ func (list *list[T]) Size() int {
 func (list *list[T]) Empty() bool {
 	return list.size == 0
 }
+
+func (list *list[T]) At(idx int) (T, *iterator[T], error) {
+	var value T
+	// in case of invalid index we return an iterator which points to nil with an error and zero-value
+	if idx < 0 || list.size == 0 || idx >= list.size {
+		return value, &iterator[T]{list: list, Ptr: nil, Index: -1}, errors.New("invalid index for candidate list")
+	}
+	it := Iterator[T](list)
+	for it = it.Begin(); it.Index != idx; {
+		it.Next()
+	}
+	return it.Ptr.value, it, nil
+}
+
+/*
+	Add/Update/Delete at a given index/iterator
+*/
+
+// func (list *list[T])
 
 // h[nil, t] <-> t[h, nil]
