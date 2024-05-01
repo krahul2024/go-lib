@@ -34,6 +34,7 @@ func main() {
 
 	list2.PushBack("first")
 	list2.PushFront("zero'th")
+	list2.PushBack("first")
 	list2.PushBack("second")
 	// for it2 = it2.Begin(); it2.Ptr != nil; {
 	// 	fmt.Println(it2.Value())
@@ -50,9 +51,22 @@ func main() {
 	// 	fmt.Println()
 	// }
 
-	_ , itr, _ := list2.At(1)
-	fmt.Println(itr.Value())
-	itr.Next()
-	fmt.Println(itr.Value())
+	// _, itr, _ := list2.At(0)
+	// fmt.Println(itr.Value())
+	// itr.Next()
+	// fmt.Println(itr.Value())
+	// list2.Update("updated value", itr.Index)
+	// fmt.Println(itr.Value())
+	// itr.Next()
+	// fmt.Println(itr.Value())
+
+	// for itr = itr.Begin(); itr.Ptr != nil; {
+	// 	fmt.Println(itr.Value())
+	// 	itr.Next()
+	// }
+
+	fmt.Println(list2.FindAll("second"))
+	fmt.Println(list2.FindAll("first"))
+	fmt.Println(list2.FindAll("fasdfsaf"))
 
 }

@@ -169,8 +169,56 @@ func (list *list[T]) At(idx int) (T, *iterator[T], error) {
 
 /*
 	Add/Update/Delete at a given index/iterator
+	1. Add : just add the node at given index, to make it a bit more flexible a list of values can be added after a given index
+	2. Update : Update can be done for a single occurence or for all the occurences or for the given index
+	3. Delete : Delete can be done for a single occurence or for all the occurences or for the given index
+	4. Batch operations for all the actions, batch delete, batch add, batch update
 */
 
-// func (list *list[T])
+func (list *list[T]) Update(value T, index int) (*iterator[T], error) {
+	_, it, err := list.At(index)
+	if err != nil {
+		return it, err
+	}
+	it.Ptr.value = value
+	return it, nil
+}
 
-// h[nil, t] <-> t[h, nil]
+func (list *list[T]) Elements() []T {
+	it := Iterator[T](list)
+	var elements []T
+
+	for it = it.Begin(); it.Ptr != nil; {
+		elements = append(elements, it.Ptr.value)
+		it.Next()
+	}
+	return elements
+}
+
+func (list *list[T]) Find(value T) (bool, *iterator[T], error) {
+	it := Iterator[T](list)
+	for it = it.Begin(); it.Ptr != nil; {
+		if it.Ptr.value == value {
+			return true, it, nil
+		}
+		it.Next()
+	}
+	return false, it, errors.New("element not found")
+}
+
+func (list *list[T]) FindAll(value T) []int {
+	it := Iterator[T](list)
+	var elements []int
+	for it = it.Begin(); it.Ptr != nil; {
+		if it.Ptr.value == value {
+			elements = append(elements, it.Index)
+		}
+		it.Next()
+	}
+	return elements
+}
+
+func (list *list[T]) Has(value T) bool {
+	has, _, _ := list.Find(value)
+	return has
+}
