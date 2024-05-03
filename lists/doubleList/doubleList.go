@@ -175,6 +175,65 @@ func (list *list[T]) At(idx int) (T, *iterator[T], error) {
 	4. Batch operations for all the actions, batch delete, batch add, batch update
 */
 
+func (list *list[T]) AddAt(value T, index int) (*iterator[T], error) {
+	if index == list.size {
+		list.PushBack(value)
+		it := Iterator[T](list)
+		return it.End(), nil
+	}
+	_, it, err := list.At(index)
+	if err != nil {
+		return it, err
+	}
+	node := &node[T]{value: value}
+	node.prev = it.Ptr.prev
+	node.next = it.Ptr
+	it.Ptr.prev.next = node
+	it.Ptr.prev = node
+	list.size++
+	return it, nil
+}
+
+func (list *list[T]) RemoveAt(index int) (bool, error) {
+	_, it, err := list.At(index)
+	if err != nil {
+		return false, err
+	}
+	it.Ptr.prev.next = it.Ptr.next
+	it.Ptr.next.prev = it.Ptr.prev
+	it.Ptr = nil
+	list.size--
+	return true, nil
+}
+
+func (list *list[T]) Remove(value T) (bool, error) {
+	it := Iterator[T](list)
+	for it = it.Begin(); it.Ptr != nil; {
+		if value == it.Ptr.value {
+			removed, err := list.RemoveAt(it.Index)
+			return removed, err
+		}
+		it.Next()
+	}
+	return false, errors.New("element not found")
+}
+
+func (list *list[T]) RemoveAll(value T) (int, error) {
+	var deletedCount = 0
+	it := Iterator[T](list)
+	for it = it.Begin(); it.Ptr != nil; {
+		if value == it.Ptr.value {
+			deleted, err := list.Remove(value)
+			if err != nil {
+				return deletedCount, err
+			} else if deleted {
+				deletedCount++
+			}
+		}
+	}
+	return deletedCount, nil
+}
+
 func (list *list[T]) Update(value T, index int) (*iterator[T], error) {
 	_, it, err := list.At(index)
 	if err != nil {

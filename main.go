@@ -69,4 +69,21 @@ func main() {
 	fmt.Println(list2.FindAll("first"))
 	fmt.Println(list2.FindAll("fasdfsaf"))
 
+	list2.AddAt("value_at_zeroth index", 0)
+	fmt.Println(list2.Elements())
+	list2.AddAt("value_at_zeroth index", -1)
+	fmt.Println(list2.Elements())
+	list2.AddAt("value_at_zeroth index", list2.Size()+1)
+	fmt.Println(list2.Elements())
+	list2.AddAt("value_at_zeroth index", list2.Size())
+	fmt.Println(list2.Elements())
+	list2.AddAt("value_at_second_index", 2)
+	fmt.Println(list2.Elements(), list2.Size())
+
+	list2.RemoveAt(0)
+	fmt.Println(list2.Elements(), list2.Size())
+
+	list2.Remove("first")
+	fmt.Println(list2.Elements(), list2.Size())
+
 }
