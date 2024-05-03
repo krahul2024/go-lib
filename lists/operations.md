@@ -1,65 +1,41 @@
-1. **Constructor/Destructor:**
-   - `list()`: Constructs an empty list.
-   - `list(size_type count)`: Constructs the list with `count` default-inserted instances of T.
-   - `list(size_type count, const T& value)`: Constructs the list with `count` copies of `value`.
-   - `list(const list& other)`: Constructs the list with the copy of the contents of `other`.
-   - `~list()`: Destructs the list.
+**Priority Queue**
+================
 
-2. **Assignment Operator:**
-   - `operator=`: Assigns values from another list.
-
-3. **Modifiers:**
-   - `push_back(const T& value)`: Adds a new element at the end of the list. -> done 
-   - `push_front(const T& value)`: Adds a new element at the beginning of the list. -> done 
-   - `pop_back()`: Removes the last element of the list. -> done 
-   - `pop_front()`: Removes the first element of the list. -> done 
-   - `insert(iterator pos, const T& value)`: Inserts a new element before the element at the specified position.
-   - `erase(iterator pos)`: Removes the element at the specified position. -> done 
-   - `clear()`: Removes all elements from the list. -> done 
-   - `swap(list& other)`: Swaps the contents of two lists.
-
-4. **Element Access:**
-   - `front()`: Returns a reference to the first element. -> done 
-   - `back()`: Returns a reference to the last element. -> done 
-
-5. **Capacity:**
-   - `empty()`: Checks whether the list is empty. -> done 
-   - `size()`: Returns the number of elements in the list. -> done 
-
-6. **Iterators:**
-   - `begin()`, `end()`: Returns iterators referring to the first and one past the last element of the list, respectively.
-   - `rbegin()`, `rend()`: Returns reverse iterators.
-
-7. **Operations:**
-   - `splice(iterator pos, list& other)`: Transfers elements from another list into the specified position.
-   - `splice(iterator pos, list& other, iterator it)`: Transfers an element from another list to the specified position.
-   - `splice(iterator pos, list& other, iterator first, iterator last)`: Transfers elements from another list into the specified position.
-   - `merge(list& other)`: Merges two sorted lists into one.
-   - `sort()`: Sorts the elements in the list.
-   - `reverse()`: Reverses the order of elements in the list.
+* **Enqueue**: Add an element to the priority queue
+* **Dequeue**: Remove the highest or lowest priority element from the priority queue
+* **Peek**: Get the highest or lowest priority element from the priority queue
+* **Size**: Get the number of elements in the priority queue
 
 
-**Add**
+**Set**
+================
 
-* Add a range of nodes: Allow the user to add a range of nodes at a given index, instead of just adding a single node.
-* Add nodes with a specific property: Allow the user to add nodes with a specific property or value at a given index.
-* Add nodes recursively: Allow the user to add nodes recursively, i.e., add nodes that are children or grandchildren of the node being added.
+* **Add**: Add an element to the set
+* **Remove**: Remove an element from the set
+* **Contains**: Check if an element is in the set
+* **Size**: Get the number of elements in the set
 
-**Update**
+**Multiset**
+================
 
-* Update nodes with a specific property: Allow the user to update nodes with a specific property or value.
-* Update nodes recursively: Allow the user to update nodes recursively, i.e., update nodes that are children or grandchildren of the node being updated.
-* Update nodes based on a condition: Allow the user to update nodes based on a condition, such as updating nodes that meet a specific criteria.
+* **Add**: Add an element to the multiset
+* **Remove**: Remove an element from the multiset
+* **Contains**: Check if an element is in the multiset
+* **Size**: Get the number of elements in the multiset
+* **Count**: Get the number of occurrences of an element in the multiset
 
-**Delete**
+**Bitset**
+================
 
-* Delete nodes recursively: Allow the user to delete nodes recursively, i.e., delete nodes that are children or grandchildren of the node being deleted.
-* Delete nodes with a specific property: Allow the user to delete nodes with a specific property or value.
-* Delete nodes based on a condition: Allow the user to delete nodes based on a condition, such as deleting nodes that meet a specific criteria.
+* **Set**: Set a bit in the bitset
+* **Clear**: Clear a bit in the bitset
+* **Test**: Check if a bit is set in the bitset
+* **Size**: Get the number of bits in the bitset
 
-Some additional ideas for the "Add", "Update", and "Delete" operations include:
+**Trie**
+================
 
-* Implementing batch operations: Allow the user to perform multiple operations in a single call, reducing the number of requests and improving performance.
-* Implementing filtering: Allow the user to filter the nodes to be updated or deleted based on specific criteria.
-* Implementing transactions: Allow the user to group multiple operations together and commit them as a single transaction, ensuring that either all operations are applied or none are.
-
+* **Insert**: Insert a key-value pair into the trie
+* **Search**: Search for a key in the trie
+* **Get**: Get the value associated with a key in the trie
+* **Size**: Get the number of keys in the trie

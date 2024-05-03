@@ -12,37 +12,37 @@ type node[T comparable] struct {
 	value T
 }
 
-type list[T comparable] struct {
+type List[T comparable] struct {
 	head *node[T]
 	tail *node[T]
 	size int
 }
 
 type iterator[T comparable] struct {
-	list  *list[T]
+	List  *List[T]
 	Ptr   *node[T]
 	Index int
 }
 
 //-------------------------Iterator Operations------------------------------------------
 
-func Iterator[T comparable](list *list[T]) *iterator[T] {
-	return &iterator[T]{list, nil, -1}
+func Iterator[T comparable](List *List[T]) *iterator[T] {
+	return &iterator[T]{List, nil, -1}
 }
 
 func (it *iterator[T]) Begin() *iterator[T] {
-	return &iterator[T]{list: it.list, Ptr: it.list.head.next, Index: 0}
+	return &iterator[T]{List: it.List, Ptr: it.List.head.next, Index: 0}
 }
 
 func (it *iterator[T]) End() *iterator[T] {
-	return &iterator[T]{list: it.list, Ptr: it.list.tail.prev, Index: it.list.size - 1}
+	return &iterator[T]{List: it.List, Ptr: it.List.tail.prev, Index: it.List.size - 1}
 }
 
 func (it *iterator[T]) Next() (*iterator[T], error) {
-	if it == nil || it.Ptr == nil || it.list == nil || it.list.head.next == it.list.tail {
-		return nil, errors.New("can't iterate over invalid/empty list")
+	if it == nil || it.Ptr == nil || it.List == nil || it.List.head.next == it.List.tail {
+		return nil, errors.New("can't iterate over invalid/empty List")
 	}
-	if it.Ptr.next == it.list.tail {
+	if it.Ptr.next == it.List.tail {
 		it.Ptr = nil
 		it.Index = -1
 		return it, nil
@@ -53,10 +53,10 @@ func (it *iterator[T]) Next() (*iterator[T], error) {
 }
 
 func (it *iterator[T]) Prev() (*iterator[T], error) {
-	if it == nil || it.Ptr == nil || it.list == nil || it.list.head.next == it.list.tail {
-		return nil, errors.New("can't iterate over invalid/empty list")
+	if it == nil || it.Ptr == nil || it.List == nil || it.List.head.next == it.List.tail {
+		return nil, errors.New("can't iterate over invalid/empty List")
 	}
-	if it.Ptr.prev == it.list.head {
+	if it.Ptr.prev == it.List.head {
 		it.Ptr = nil
 		it.Index = -1
 		return it, nil
@@ -68,7 +68,7 @@ func (it *iterator[T]) Prev() (*iterator[T], error) {
 
 func (it *iterator[T]) Value() (T, error) {
 	var value T
-	if it == nil || it.list == nil || it.list.head.next == it.list.tail || it.Ptr == nil { // in any of the cases the list seems to be empty
+	if it == nil || it.List == nil || it.List.head.next == it.List.tail || it.Ptr == nil { // in any of the cases the List seems to be empty
 		return value, errors.New("can't get value for invalid/non-existent node")
 	}
 	return it.Ptr.value, nil
@@ -76,91 +76,91 @@ func (it *iterator[T]) Value() (T, error) {
 
 //-------------------------------------List Operations--------------------------------------
 
-func NewList[T comparable]() *list[T] {
+func NewList[T comparable]() *List[T] {
 	head := &node[T]{}
 	tail := &node[T]{}
 	head.next = tail
 	tail.prev = head
-	return &list[T]{head: head, tail: tail, size: 0}
+	return &List[T]{head: head, tail: tail, size: 0}
 }
 
-func (list *list[T]) PushFront(value T) {
+func (List *List[T]) PushFront(value T) {
 	tempNode := &node[T]{value: value}
-	list.head.next.prev = tempNode
-	tempNode.next = list.head.next
-	tempNode.prev = list.head
-	list.head.next = tempNode
-	list.size++
+	List.head.next.prev = tempNode
+	tempNode.next = List.head.next
+	tempNode.prev = List.head
+	List.head.next = tempNode
+	List.size++
 }
 
-func (list *list[T]) PushBack(value T) {
+func (List *List[T]) PushBack(value T) {
 	tempNode := &node[T]{value: value}
-	list.tail.prev.next = tempNode
-	tempNode.prev = list.tail.prev
-	list.tail.prev = tempNode
-	tempNode.next = list.tail
-	list.size++
+	List.tail.prev.next = tempNode
+	tempNode.prev = List.tail.prev
+	List.tail.prev = tempNode
+	tempNode.next = List.tail
+	List.size++
 }
 
-func (list *list[T]) PopBack() (T, error) {
+func (List *List[T]) PopBack() (T, error) {
 	var value T
-	if list.head.next == list.tail {
-		return value, errors.New("can't delete from an empty list")
+	if List.head.next == List.tail {
+		return value, errors.New("can't delete from an empty List")
 	}
-	prevNode := list.tail.prev
-	list.tail.prev.prev.next = list.tail
-	list.tail.prev = list.tail.prev.prev
+	prevNode := List.tail.prev
+	List.tail.prev.prev.next = List.tail
+	List.tail.prev = List.tail.prev.prev
 	value = prevNode.value
 	prevNode = nil
-	list.size--
+	List.size--
 	return value, nil
 }
 
-func (list *list[T]) PopFront() (T, error) {
+func (List *List[T]) PopFront() (T, error) {
 	var value T
-	if list.head.next == list.tail {
-		return value, errors.New("can't delete from an empty list")
+	if List.head.next == List.tail {
+		return value, errors.New("can't delete from an empty List")
 	}
-	tempNode := list.head.next
-	list.head.next.next.prev = list.head
-	list.head.next = list.head.next.next
+	tempNode := List.head.next
+	List.head.next.next.prev = List.head
+	List.head.next = List.head.next.next
 	value = tempNode.value
 	tempNode = nil
-	list.size--
+	List.size--
 	return value, nil
 }
 
-func (list *list[T]) Front() (T, error) {
+func (List *List[T]) Front() (T, error) {
 	var value T
-	if list.size == 0 || list.head.next == list.tail {
-		return value, errors.New("the list is empty")
+	if List.size == 0 || List.head.next == List.tail {
+		return value, errors.New("the List is empty")
 	}
-	return list.head.next.value, nil
+	return List.head.next.value, nil
 }
 
-func (list *list[T]) Back() (T, error) {
+func (List *List[T]) Back() (T, error) {
 	var value T
-	if list.size == 0 || list.head.next == list.tail {
-		return value, errors.New("the list is empty")
+	if List.size == 0 || List.head.next == List.tail {
+		return value, errors.New("the List is empty")
 	}
-	return list.tail.prev.value, nil
+	return List.tail.prev.value, nil
 }
 
-func (list *list[T]) Size() int {
-	return list.size
+func (List *List[T]) Size() int {
+	return List.size
 }
 
-func (list *list[T]) Empty() bool {
-	return list.size == 0
+func (List *List[T]) Empty() bool {
+	return List.size == 0
 }
 
-func (list *list[T]) At(idx int) (T, *iterator[T], error) {
+func (List *List[T]) At(idx int) (T, *iterator[T], error) {
 	var value T
 	// in case of invalid index we return an iterator which points to nil with an error and zero-value
-	if idx < 0 || list.size == 0 || idx >= list.size {
-		return value, &iterator[T]{list: list, Ptr: nil, Index: -1}, errors.New("invalid index for candidate list")
+	if idx < 0 || List.size == 0 || idx >= List.size {
+		return value, &iterator[T]{List: List, Ptr: nil, Index: -1}, errors.New("invalid index for candidate List")
 	}
-	it := Iterator[T](list)
+	it := Iterator[T](List)
 	for it = it.Begin(); it.Index != idx; {
 		it.Next()
 	}
@@ -169,19 +169,19 @@ func (list *list[T]) At(idx int) (T, *iterator[T], error) {
 
 /*
 	Add/Update/Delete at a given index/iterator
-	1. Add : just add the node at given index, to make it a bit more flexible a list of values can be added after a given index
+	1. Add : just add the node at given index, to make it a bit more flexible a List of values can be added after a given index
 	2. Update : Update can be done for a single occurence or for all the occurences or for the given index
 	3. Delete : Delete can be done for a single occurence or for all the occurences or for the given index
 	4. Batch operations for all the actions, batch delete, batch add, batch update
 */
 
-func (list *list[T]) AddAt(value T, index int) (*iterator[T], error) {
-	if index == list.size {
-		list.PushBack(value)
-		it := Iterator[T](list)
+func (List *List[T]) AddAt(value T, index int) (*iterator[T], error) {
+	if index == List.size {
+		List.PushBack(value)
+		it := Iterator[T](List)
 		return it.End(), nil
 	}
-	_, it, err := list.At(index)
+	_, it, err := List.At(index)
 	if err != nil {
 		return it, err
 	}
@@ -190,27 +190,27 @@ func (list *list[T]) AddAt(value T, index int) (*iterator[T], error) {
 	node.next = it.Ptr
 	it.Ptr.prev.next = node
 	it.Ptr.prev = node
-	list.size++
+	List.size++
 	return it, nil
 }
 
-func (list *list[T]) RemoveAt(index int) (bool, error) {
-	_, it, err := list.At(index)
+func (List *List[T]) RemoveAt(index int) (bool, error) {
+	_, it, err := List.At(index)
 	if err != nil {
 		return false, err
 	}
 	it.Ptr.prev.next = it.Ptr.next
 	it.Ptr.next.prev = it.Ptr.prev
 	it.Ptr = nil
-	list.size--
+	List.size--
 	return true, nil
 }
 
-func (list *list[T]) Remove(value T) (bool, error) {
-	it := Iterator[T](list)
+func (List *List[T]) Remove(value T) (bool, error) {
+	it := Iterator[T](List)
 	for it = it.Begin(); it.Ptr != nil; {
 		if value == it.Ptr.value {
-			removed, err := list.RemoveAt(it.Index)
+			removed, err := List.RemoveAt(it.Index)
 			return removed, err
 		}
 		it.Next()
@@ -218,12 +218,12 @@ func (list *list[T]) Remove(value T) (bool, error) {
 	return false, errors.New("element not found")
 }
 
-func (list *list[T]) RemoveAll(value T) (int, error) {
+func (List *List[T]) RemoveAll(value T) (int, error) {
 	var deletedCount = 0
-	it := Iterator[T](list)
+	it := Iterator[T](List)
 	for it = it.Begin(); it.Ptr != nil; {
 		if value == it.Ptr.value {
-			deleted, err := list.Remove(value)
+			deleted, err := List.Remove(value)
 			if err != nil {
 				return deletedCount, err
 			} else if deleted {
@@ -234,8 +234,8 @@ func (list *list[T]) RemoveAll(value T) (int, error) {
 	return deletedCount, nil
 }
 
-func (list *list[T]) Update(value T, index int) (*iterator[T], error) {
-	_, it, err := list.At(index)
+func (List *List[T]) Update(value T, index int) (*iterator[T], error) {
+	_, it, err := List.At(index)
 	if err != nil {
 		return it, err
 	}
@@ -243,8 +243,8 @@ func (list *list[T]) Update(value T, index int) (*iterator[T], error) {
 	return it, nil
 }
 
-func (list *list[T]) Elements() []T {
-	it := Iterator[T](list)
+func (List *List[T]) Elements() []T {
+	it := Iterator[T](List)
 	var elements []T
 
 	for it = it.Begin(); it.Ptr != nil; {
@@ -254,8 +254,8 @@ func (list *list[T]) Elements() []T {
 	return elements
 }
 
-func (list *list[T]) Find(value T) (bool, *iterator[T], error) {
-	it := Iterator[T](list)
+func (List *List[T]) Find(value T) (bool, *iterator[T], error) {
+	it := Iterator[T](List)
 	for it = it.Begin(); it.Ptr != nil; {
 		if it.Ptr.value == value {
 			return true, it, nil
@@ -265,8 +265,8 @@ func (list *list[T]) Find(value T) (bool, *iterator[T], error) {
 	return false, it, errors.New("element not found")
 }
 
-func (list *list[T]) FindAll(value T) []int {
-	it := Iterator[T](list)
+func (List *List[T]) FindAll(value T) []int {
+	it := Iterator[T](List)
 	var elements []int
 	for it = it.Begin(); it.Ptr != nil; {
 		if it.Ptr.value == value {
@@ -277,7 +277,7 @@ func (list *list[T]) FindAll(value T) []int {
 	return elements
 }
 
-func (list *list[T]) Has(value T) bool {
-	has, _, _ := list.Find(value)
+func (List *List[T]) Has(value T) bool {
+	has, _, _ := List.Find(value)
 	return has
 }

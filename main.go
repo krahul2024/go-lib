@@ -3,12 +3,39 @@ package main
 import (
 	"fmt"
 
-	"github.com/krahul2024/go-lib/lists/doubleList"
+	"github.com/krahul2024/go-lib/deque"
 )
 
+type pair struct {
+	a int
+	b int
+}
+
 func main() {
+
+	deq := deque.NewDeque[pair]()
+	fmt.Println(deq)
+
+	deq.PushBack(pair{12, 312})
+	deq.PushFront(pair{90, 18})
+	deq.PushFront(pair{402, 45})
+	fmt.Println(deq.Front())
+	fmt.Println(deq.Back())
+
+	// stack := stack.NewStack[int]()
+
+	// for i := 1; i <= 10; i++ {
+	// 	stack.Push(i * i)
+	// 	fmt.Println(stack.Top())
+	// }
+
+	// fmt.Println(stack.Size())
+	// fmt.Println(stack.Pop())
+	// fmt.Println(stack.Size())
+	// fmt.Println(stack.Top())
+
 	// list := doubleList.NewList[int]()
-	list2 := doubleList.NewList[string]()
+	// list2 := doubleList.NewList[string]()
 	// it := doubleList.Iterator[int](list)
 	// it2 := doubleList.Iterator[string](list2)
 
@@ -32,10 +59,10 @@ func main() {
 	// 	it.Prev()
 	// }
 
-	list2.PushBack("first")
-	list2.PushFront("zero'th")
-	list2.PushBack("first")
-	list2.PushBack("second")
+	// list2.PushBack("first")
+	// list2.PushFront("zero'th")
+	// list2.PushBack("first")
+	// list2.PushBack("second")
 	// for it2 = it2.Begin(); it2.Ptr != nil; {
 	// 	fmt.Println(it2.Value())
 	// 	it2.Next()
@@ -65,25 +92,25 @@ func main() {
 	// 	itr.Next()
 	// }
 
-	fmt.Println(list2.FindAll("second"))
-	fmt.Println(list2.FindAll("first"))
-	fmt.Println(list2.FindAll("fasdfsaf"))
+	// fmt.Println(list2.FindAll("second"))
+	// fmt.Println(list2.FindAll("first"))
+	// fmt.Println(list2.FindAll("fasdfsaf"))
 
-	list2.AddAt("value_at_zeroth index", 0)
-	fmt.Println(list2.Elements())
-	list2.AddAt("value_at_zeroth index", -1)
-	fmt.Println(list2.Elements())
-	list2.AddAt("value_at_zeroth index", list2.Size()+1)
-	fmt.Println(list2.Elements())
-	list2.AddAt("value_at_zeroth index", list2.Size())
-	fmt.Println(list2.Elements())
-	list2.AddAt("value_at_second_index", 2)
-	fmt.Println(list2.Elements(), list2.Size())
+	// list2.AddAt("value_at_zeroth index", 0)
+	// fmt.Println(list2.Elements())
+	// list2.AddAt("value_at_zeroth index", -1)
+	// fmt.Println(list2.Elements())
+	// list2.AddAt("value_at_zeroth index", list2.Size()+1)
+	// fmt.Println(list2.Elements())
+	// list2.AddAt("value_at_zeroth index", list2.Size())
+	// fmt.Println(list2.Elements())
+	// list2.AddAt("value_at_second_index", 2)
+	// fmt.Println(list2.Elements(), list2.Size())
 
-	list2.RemoveAt(0)
-	fmt.Println(list2.Elements(), list2.Size())
+	// list2.RemoveAt(0)
+	// fmt.Println(list2.Elements(), list2.Size())
 
-	list2.Remove("first")
-	fmt.Println(list2.Elements(), list2.Size())
+	// list2.Remove("first")
+	// fmt.Println(list2.Elements(), list2.Size())
 
 }
